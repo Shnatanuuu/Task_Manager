@@ -1,38 +1,51 @@
 #!/usr/bin/env python3
 """
-Combined startup script for TaskFlow backend + frontend
+Startup script for TaskFlow full stack on Render
 """
-
 import os
 import subprocess
-import uvicorn
-from database import init_db
 from pathlib import Path
+import uvicorn
+
+# Import your database initializer
+from backend.database import init_db  # adjust import if your database.py is elsewhere
 
 def start_frontend():
-    frontend_path = Path(__file__).parent / "frontend"
-    # Run frontend server on port 8080
-    subprocess.Popen(
-        ["python", "-m", "http.server", "8080"],
-        cwd=frontend_path
-    )
-    print("Frontend server started on http://localhost:8080")
+    """
+    Optional: start frontend server if folder exists
+    """
+    # Adjust path: assumes frontend is sibling of backend folder
+    frontend_path = Path(__file__).parent.parent / "frontend"
 
-def start_backend():
-    # Set environment variables if not already set
-    if not os.getenv("DATABASE_URL"):
-        os.environ["DATABASE_URL"] = "postgresql://task_aymz_user:0huPRUaQPcEowyWi2M3Zn0f6s0hVz2Rz@dpg-d2v68l6r433s73et1rr0-a/task_aymz"
-    
-    if not os.getenv("SECRET_KEY"):
-        os.environ["SECRET_KEY"] = "your-secret-key-change-in-production"
-    
-    # Initialize database
+    if frontend_path.exists():
+        print(f"Starting frontend at {frontend_path}")
+        subprocess.Popen(
+            ["python", "-m", "http.server", "8080"],
+            cwd=frontend_path
+        )
+    else:
+        print(f"Frontend folder not found at {frontend_path}, skipping frontend start.")
+
+def main():
+    # Initialize DB
+    print("Initializing database...")
     init_db()
-    print("Database initialized successfully")
-    
+    print("Database initialized.")
+
+    # Set environment variables
+    os.environ.setdefault(
+        "DATABASE_URL",
+        "postgresql://task_aymz_user:0huPRUaQPcEowyWi2M3Zn0f6s0hVz2Rz@dpg-d2v68l6r433s73et1rr0-a/task_aymz"
+    )
+    os.environ.setdefault("SECRET_KEY", "your-secret-key-change-in-production")
+
+    # Optionally start frontend
+    start_frontend()
+
     # Start FastAPI backend
+    print("Starting FastAPI backend...")
     uvicorn.run(
-        "main:app",
+        "backend.main:app",  # adjust if your main.py is elsewhere
         host="0.0.0.0",
         port=8000,
         reload=True,
@@ -40,5 +53,4 @@ def start_backend():
     )
 
 if __name__ == "__main__":
-    start_frontend()   # optional, only if you want Render to serve frontend too
-    start_backend()
+    main()
