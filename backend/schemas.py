@@ -20,6 +20,7 @@ class UserResponse(UserBase):
     
     class Config:
         from_attributes = True
+        use_enum_values = True
 
 # Authentication Schemas
 class LoginRequest(BaseModel):

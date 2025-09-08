@@ -939,6 +939,21 @@ async function createTaskLog(logData) {
   }
 }
 
+// Task Log Approval
+async function updateTaskLogStatus(logId, status) {
+  try {
+    await apiRequest("PATCH", `/task-logs/${logId}`, { status });
+    showToast(
+      "Task Log Updated",
+      `Task log marked as ${status.toLowerCase()}`,
+      "success"
+    );
+    await loadApprovalsData(); // refresh approvals page
+  } catch (error) {
+    showToast("Update Failed", error.message, "error");
+  }
+}
+
 // Utility Date Functions
 function isDateToday(date) {
   const today = new Date();
@@ -1101,5 +1116,48 @@ function renderWFHRequests(requests) {
 }
 
 function renderApprovals(approvals) {
-  // Implementation for approvals rendering
+  const container = document.getElementById("approvals-list");
+
+  if (!approvals || approvals.length === 0) {
+    container.innerHTML = '<p class="no-data">No approvals pending</p>';
+    return;
+  }
+
+  container.innerHTML = approvals
+    .map(
+      (log) => `
+        <div class="approval-item">
+          <div class="approval-info">
+            <div><strong>${log.userName}</strong> - ${new Date(
+        log.date
+      ).toLocaleDateString()}</div>
+            <div>${log.description}</div>
+            ${
+              log.durationMinutes
+                ? `<div><i class="fas fa-stopwatch"></i> ${Math.floor(
+                    log.durationMinutes / 60
+                  )}h ${log.durationMinutes % 60}m</div>`
+                : ""
+            }
+          </div>
+          <div class="approval-actions">
+            <button class="btn-approve" data-id="${log.id}">Approve</button>
+            <button class="btn-reject" data-id="${log.id}">Reject</button>
+          </div>
+        </div>
+      `
+    )
+    .join("");
+
+  // Attach event listeners
+  container.querySelectorAll(".btn-approve").forEach((btn) => {
+    btn.addEventListener("click", () =>
+      updateTaskLogStatus(btn.dataset.id, "Approved")
+    );
+  });
+  container.querySelectorAll(".btn-reject").forEach((btn) => {
+    btn.addEventListener("click", () =>
+      updateTaskLogStatus(btn.dataset.id, "Rejected")
+    );
+  });
 }
