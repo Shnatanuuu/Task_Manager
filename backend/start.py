@@ -8,8 +8,9 @@ from pathlib import Path
 
 def main():
     # Set environment variables if not already set
-    if not os.getenv("DATABASE_URL"):
-        os.environ["DATABASE_URL"] = "mysql+pymysql://root:Shantanu%40241@localhost:3306/taskflow"
+   if not os.getenv("DATABASE_URL"):
+    os.environ["DATABASE_URL"] = "postgresql://task_aymz_user:0huPRUaQPcEowyWi2M3Zn0f6s0hVz2Rz@dpg-d2v68l6r433s73et1rr0-a/task_aymz"
+
     
     if not os.getenv("SECRET_KEY"):
         os.environ["SECRET_KEY"] = "your-secret-key-change-in-production"
