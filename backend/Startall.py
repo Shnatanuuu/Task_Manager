@@ -43,14 +43,16 @@ def main():
     # start_frontend()
 
     # Start FastAPI backend
-    print("🚀 Starting FastAPI backend...")
-    uvicorn.run(
-        "backend.main:app",
-        host="0.0.0.0",
-        port=8000,
-        reload=False,  # disable reload on Render (not needed in production)
-        log_level="info"
-    )
+port = int(os.environ.get("PORT", 8000))
+
+uvicorn.run(
+    "backend.main:app",
+    host="0.0.0.0",
+    port=port,  # 👈 use Render's assigned port
+    reload=False,
+    log_level="info"
+)
+
 
 if __name__ == "__main__":
     main()
