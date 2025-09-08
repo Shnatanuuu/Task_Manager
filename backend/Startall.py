@@ -7,16 +7,15 @@ import subprocess
 from pathlib import Path
 import uvicorn
 
-# Import your database initializer
-from database import init_db
-  # adjust import if your database.py is elsewhere
+# ✅ Use package-relative import so it works with `python -m backend.Startall`
+from .database import init_db  
 
 def start_frontend():
     """
     Optional: start frontend server if folder exists
+    NOTE: This is not the recommended way for Render – see explanation below.
     """
-    # Adjust path: assumes frontend is sibling of backend folder
-    frontend_path = Path(__file__).parent.parent / "frontend"
+    frontend_path = Path(__file__).resolve().parent.parent / "frontend"
 
     if frontend_path.exists():
         print(f"Starting frontend at {frontend_path}")
@@ -28,28 +27,28 @@ def start_frontend():
         print(f"Frontend folder not found at {frontend_path}, skipping frontend start.")
 
 def main():
-    # Initialize DB
-    print("Initializing database...")
-    init_db()
-    print("Database initialized.")
-
-    # Set environment variables
+    # Set environment variables early
     os.environ.setdefault(
         "DATABASE_URL",
         "postgresql://task_aymz_user:0huPRUaQPcEowyWi2M3Zn0f6s0hVz2Rz@dpg-d2v68l6r433s73et1rr0-a/task_aymz"
     )
     os.environ.setdefault("SECRET_KEY", "your-secret-key-change-in-production")
 
-    # Optionally start frontend
-    start_frontend()
+    # Initialize database (run migrations)
+    print("Initializing database...")
+    init_db()
+    print("✅ Database initialized.")
+
+    # Optionally start frontend (not recommended on Render, see below)
+    # start_frontend()
 
     # Start FastAPI backend
-    print("Starting FastAPI backend...")
+    print("🚀 Starting FastAPI backend...")
     uvicorn.run(
-        "backend.main:app",  # adjust if your main.py is elsewhere
+        "backend.main:app",
         host="0.0.0.0",
         port=8000,
-        reload=True,
+        reload=False,  # disable reload on Render (not needed in production)
         log_level="info"
     )
 

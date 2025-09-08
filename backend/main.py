@@ -11,47 +11,49 @@ import bcrypt
 import os
 from pathlib import Path
 
-from database import get_db, init_db
-from models import *
-from schemas import *
-from fastapi.middleware.cors import CORSMiddleware
+from .database import get_db, init_db
+from .models import *
+from .schemas import *
 
-app = FastAPI()
+# ✅ Initialize FastAPI once
+app = FastAPI(
+    title="TaskFlow API",
+    description="Office Task Management System",
+    version="1.0.0"
+)
 
-# Allow frontend to communicate
-origins = [
-    "http://localhost:8080",  # Your frontend
-    "http://127.0.0.1:8080"
-]
-
+# ✅ CORS configuration (single definition)
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=origins,
+    allow_origins=["*"],  # In production, replace with your frontend URL
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
 )
 
-# Initialize FastAPI app
-app = FastAPI(title="TaskFlow API", description="Office Task Management System", version="1.0.0")
-
-# CORS middleware
-app.add_middleware(
-    CORSMiddleware,
-    allow_origins=["http://localhost:3000", "http://localhost:8080"],
-    allow_credentials=True,
-    allow_methods=["*"],
-    allow_headers=["*"],
-)
-
-# Security
 security = HTTPBearer()
 SECRET_KEY = os.getenv("SECRET_KEY", "your-secret-key-here")
 ALGORITHM = "HS256"
 
-# Serve static files
+# ✅ Serve frontend files
 frontend_path = Path(__file__).parent.parent / "frontend"
-app.mount("/static", StaticFiles(directory=str(frontend_path)), name="static")
+if frontend_path.exists():
+    app.mount("/static", StaticFiles(directory=str(frontend_path)), name="static")
+
+    @app.get("/{full_path:path}")
+    async def serve_frontend(full_path: str):
+        """
+        Serve index.html for all non-API routes (SPA fallback).
+        This allows frontend routing like /dashboard, /tasks, etc.
+        """
+        potential_file = frontend_path / full_path
+        if potential_file.is_file():
+            return FileResponse(str(potential_file))
+        return FileResponse(str(frontend_path / "index.html"))
+
+# --- Authentication Dependency, Utility Functions, Routes (unchanged) ---
+# (Paste your existing authentication, task, attendance, WFH routes here)
+
 
 # Authentication dependency
 async def get_current_user(
