@@ -8,7 +8,8 @@ from pathlib import Path
 import uvicorn
 
 # Import your database initializer
-from backend.database import init_db  # adjust import if your database.py is elsewhere
+from database import init_db
+  # adjust import if your database.py is elsewhere
 
 def start_frontend():
     """
