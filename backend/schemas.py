@@ -1,7 +1,7 @@
 from pydantic import BaseModel, EmailStr
 from typing import List, Optional
 from datetime import datetime, date
-from models import UserRole, TaskStatus, TaskPriority, WFHStatus
+from .models import UserRole, TaskStatus, TaskPriority, WFHStatus
 
 # User Schemas
 class UserBase(BaseModel):

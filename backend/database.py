@@ -1,6 +1,6 @@
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
-from models import Base, Department, User, UserRole
+from .models import Base, Department, User, UserRole
 import os
 from datetime import datetime
 import bcrypt
