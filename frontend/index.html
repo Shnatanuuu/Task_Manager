@@ -1,0 +1,454 @@
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TaskFlow - Office Task Management System</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"">
+</head>
+<body>
+    <!-- Login Page -->
+    <div id="login-page" class="page active">
+        <div class="login-container">
+            <div class="login-card">
+                <div class="login-header">
+                    <div class="app-logo">
+                        <i class="fas fa-tasks"></i>
+                        <h1>TaskFlow</h1>
+                    </div>
+                    
+                </div>
+                <form id="login-form">
+                    <div class="form-group">
+                        <label for="email">Email</label>
+                        <input type="email" id="email" name="email" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="password">Password</label>
+                        <input type="password" id="password" name="password" required>
+                    </div>
+                    <button type="submit" class="btn btn-primary">
+                        <i class="fas fa-sign-in-alt mr-2"></i>
+                        Sign In
+                    </button>
+                </form>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Dashboard Page -->
+    <div id="dashboard-page" class="page">
+        <div class="app-layout">
+            <!-- Sidebar -->
+            <aside id="sidebar" class="sidebar">
+                <div class="sidebar-header">
+                    <div class="app-info">
+                        <div class="app-icon">
+                            <i class="fas fa-tasks"></i>
+                        </div>
+                        <div>
+                            <h2>TaskFlow</h2>
+                            <p id="user-department">Department</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="user-profile">
+                    <div class="user-avatar">
+                        <span id="user-initials">JD</span>
+                    </div>
+                    <div class="user-info">
+                        <p id="user-name">User Name</p>
+                        <p id="user-role">Role</p>
+                    </div>
+                    <div class="attendance-status">
+                        <div class="status-row">
+                            <span>Status:</span>
+                            <span id="attendance-status" class="status-badge">Checked Out</span>
+                        </div>
+                        <button id="attendance-toggle" class="btn btn-outline">
+                            <i class="fas fa-clock"></i>
+                            Check In
+                        </button>
+                    </div>
+                </div>
+
+                <nav class="sidebar-nav">
+                    <div class="nav-section">
+                        <a href="#" class="nav-item active" data-view="dashboard">
+                            <i class="fas fa-home"></i>
+                            <span>Dashboard</span>
+                        </a>
+                        <a href="#" class="nav-item" data-view="kanban">
+                            <i class="fas fa-columns"></i>
+                            <span>Kanban Board</span>
+                        </a>
+                        <a href="#" class="nav-item" data-view="calendar">
+                            <i class="fas fa-calendar"></i>
+                            <span>Calendar</span>
+                        </a>
+                    </div>
+
+                    <div class="nav-section">
+                        <a href="#" class="nav-item" data-view="task-performed">
+                            <i class="fas fa-list-check"></i>
+                            <span>Task Performed</span>
+                        </a>
+                    </div>
+
+                    <div class="nav-section hod-features" style="display: none;">
+                        <a href="#" class="nav-item" data-view="team">
+                            <i class="fas fa-users"></i>
+                            <span>Team Management</span>
+                        </a>
+                        <a href="#" class="nav-item" data-view="approvals">
+                            <i class="fas fa-check-circle"></i>
+                            <span>Task Approvals</span>
+                        </a>
+                    </div>
+
+                    <div class="nav-section admin-features" style="display: none;">
+                        <a href="#" class="nav-item" data-view="reports">
+                            <i class="fas fa-chart-bar"></i>
+                            <span>Performance Reports</span>
+                        </a>
+                        <a href="#" class="nav-item" data-view="users">
+                            <i class="fas fa-user-cog"></i>
+                            <span>User Management</span>
+                        </a>
+                    </div>
+
+                    <div class="nav-section wfh-section">
+                        <a href="#" class="nav-item" data-view="wfh">
+                            <i class="fas fa-home"></i>
+                            <span>WFH Request</span>
+                        </a>
+                    </div>
+                </nav>
+
+                <div class="sidebar-footer">
+                    <button class="nav-item">
+                        <i class="fas fa-cog"></i>
+                        <span>Settings</span>
+                    </button>
+                    <button id="logout-btn" class="nav-item logout">
+                        <i class="fas fa-sign-out-alt"></i>
+                        <span>Logout</span>
+                    </button>
+                </div>
+            </aside>
+
+            <!-- Main Content -->
+            <main class="main-content">
+                <header class="header">
+                    <button id="sidebar-toggle" class="sidebar-toggle">
+                        <i class="fas fa-bars"></i>
+                    </button>
+                    <h1 id="page-title">Dashboard</h1>
+                </header>
+
+                <div class="content">
+                    <!-- Dashboard View -->
+                    <div id="dashboard-view" class="view active">
+                        <div class="stats-grid">
+                            <div class="stat-card">
+                                <div class="stat-icon">
+                                    <i class="fas fa-tasks"></i>
+                                </div>
+                                <div class="stat-content">
+                                    <h3 id="total-tasks">0</h3>
+                                    <p>Total Tasks</p>
+                                </div>
+                            </div>
+                            <div class="stat-card">
+                                <div class="stat-icon">
+                                    <i class="fas fa-check"></i>
+                                </div>
+                                <div class="stat-content">
+                                    <h3 id="completed-tasks">0</h3>
+                                    <p>Completed</p>
+                                </div>
+                            </div>
+                            <div class="stat-card">
+                                <div class="stat-icon">
+                                    <i class="fas fa-clock"></i>
+                                </div>
+                                <div class="stat-content">
+                                    <h3 id="in-progress-tasks">0</h3>
+                                    <p>In Progress</p>
+                                </div>
+                            </div>
+                            <div class="stat-card">
+                                <div class="stat-icon">
+                                    <i class="fas fa-exclamation-triangle"></i>
+                                </div>
+                                <div class="stat-content">
+                                    <h3 id="overdue-tasks">0</h3>
+                                    <p>Overdue</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="recent-tasks">
+                            <div class="card">
+                                <div class="card-header">
+                                    <h3>Recent Tasks</h3>
+                                </div>
+                                <div class="card-content">
+                                    <div id="recent-tasks-list">
+                                        <p class="no-data">No recent tasks</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Kanban View -->
+                    <div id="kanban-view" class="view">
+                        <div class="view-header">
+                            <h2>Kanban Board</h2>
+                            <div class="view-actions">
+                                <select id="task-filter" class="select">
+                                    <option value="all">All Tasks</option>
+                                    <option value="my-tasks">My Tasks Only</option>
+                                    <option id="assigned-by-me-option" value="assigned-by-me" style="display: none;">Assigned by Me</option>
+                                </select>
+                                <button id="add-task-btn" class="btn btn-primary" style="display: none;">
+                                    <i class="fas fa-plus"></i>
+                                    Add Task
+                                </button>
+                            </div>
+                        </div>
+                        <div class="kanban-board">
+                            <div class="kanban-column" data-status="To Do">
+                                <div class="column-header">
+                                    <div class="column-title">
+                                        <div class="status-dot todo"></div>
+                                        <span>To Do</span>
+                                    </div>
+                                    <span class="task-count">0</span>
+                                </div>
+                                <div class="column-content" id="todo-tasks"></div>
+                            </div>
+                            <div class="kanban-column" data-status="In Progress">
+                                <div class="column-header">
+                                    <div class="column-title">
+                                        <div class="status-dot progress"></div>
+                                        <span>In Progress</span>
+                                    </div>
+                                    <span class="task-count">0</span>
+                                </div>
+                                <div class="column-content" id="progress-tasks"></div>
+                            </div>
+                            <div class="kanban-column" data-status="Done">
+                                <div class="column-header">
+                                    <div class="column-title">
+                                        <div class="status-dot done"></div>
+                                        <span>Done</span>
+                                    </div>
+                                    <span class="task-count">0</span>
+                                </div>
+                                <div class="column-content" id="done-tasks"></div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Calendar View -->
+                    <div id="calendar-view" class="view">
+                        <div class="view-header">
+                            <h2>Task Calendar</h2>
+                            <div class="view-actions">
+                                <select id="employee-select" class="select" style="display: none;">
+                                    <option value="">My Tasks</option>
+                                </select>
+                                <div class="calendar-nav">
+                                    <button id="prev-month" class="btn btn-outline">
+                                        <i class="fas fa-chevron-left"></i>
+                                    </button>
+                                    <span id="current-month">January 2025</span>
+                                    <button id="next-month" class="btn btn-outline">
+                                        <i class="fas fa-chevron-right"></i>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="calendar-container">
+                            <div class="calendar">
+                                <div class="calendar-header">
+                                    <div class="day-header">Sun</div>
+                                    <div class="day-header">Mon</div>
+                                    <div class="day-header">Tue</div>
+                                    <div class="day-header">Wed</div>
+                                    <div class="day-header">Thu</div>
+                                    <div class="day-header">Fri</div>
+                                    <div class="day-header">Sat</div>
+                                </div>
+                                <div id="calendar-grid" class="calendar-grid"></div>
+                            </div>
+                            <div class="calendar-sidebar">
+                                <div class="card">
+                                    <div class="card-header">
+                                        <h3 id="selected-date-title">Select a Date</h3>
+                                    </div>
+                                    <div class="card-content">
+                                        <div id="selected-date-content">
+                                            <p class="no-data">Click on a date to view tasks and performance logs</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Task Performed View -->
+                    <div id="task-performed-view" class="view">
+                        <div class="view-header">
+                            <h2>Task Performed</h2>
+                            <button id="log-task-btn" class="btn btn-primary">
+                                <i class="fas fa-plus"></i>
+                                Log Task
+                            </button>
+                        </div>
+                        <div class="task-logs-container">
+                            <div class="card">
+                                <div class="card-header">
+                                    <h3>Filter by Date</h3>
+                                </div>
+                                <div class="card-content">
+                                    <input type="date" id="date-filter" class="input">
+                                </div>
+                            </div>
+                            <div class="card">
+                                <div class="card-header">
+                                    <h3 id="logs-date-title">Tasks for Today</h3>
+                                </div>
+                                <div class="card-content">
+                                    <div id="date-logs">
+                                        <p class="no-data">No tasks logged for this date</p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="card">
+                                <div class="card-header">
+                                    <h3>Recent Activity</h3>
+                                </div>
+                                <div class="card-content">
+                                    <div id="recent-logs">
+                                        <p class="no-data">No task logs yet</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- WFH Request View -->
+                    <div id="wfh-view" class="view">
+                        <div class="view-header">
+                            <h2>Work From Home Requests</h2>
+                            <button id="new-wfh-btn" class="btn btn-primary">
+                                <i class="fas fa-plus"></i>
+                                New Request
+                            </button>
+                        </div>
+                        <div id="wfh-requests">
+                            <p class="no-data">No WFH requests</p>
+                        </div>
+                    </div>
+
+                    <!-- Task Approvals View -->
+                    <div id="approvals-view" class="view">
+                        <div class="view-header">
+                            <h2>Task Approvals</h2>
+                        </div>
+                        <div id="approval-requests">
+                            <p class="no-data">No pending approvals</p>
+                        </div>
+                    </div>
+                </div>
+            </main>
+        </div>
+    </div>
+
+    <!-- Task Modal -->
+    <div id="task-modal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Add New Task</h3>
+                <button class="modal-close">&times;</button>
+            </div>
+            <form id="task-form">
+                <div class="form-group">
+                    <label for="task-title">Title</label>
+                    <input type="text" id="task-title" name="title" required>
+                </div>
+                <div class="form-group">
+                    <label for="task-description">Description</label>
+                    <textarea id="task-description" name="description"></textarea>
+                </div>
+                <div class="form-group">
+                    <label for="task-priority">Priority</label>
+                    <select id="task-priority" name="priority">
+                        <option value="Low">Low</option>
+                        <option value="Medium">Medium</option>
+                        <option value="High">High</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="task-due-date">Due Date</label>
+                    <input type="datetime-local" id="task-due-date" name="dueDate">
+                </div>
+                <div class="form-group">
+                    <label>Assignees</label>
+                    <div id="assignee-list" class="checkbox-group"></div>
+                </div>
+                <div class="modal-actions">
+                    <button type="button" class="btn btn-outline" id="cancel-task">Cancel</button>
+                    <button type="submit" class="btn btn-primary">Create Task</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Task Log Modal -->
+    <div id="task-log-modal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Log Task Performed</h3>
+                <button class="modal-close">&times;</button>
+            </div>
+            <form id="task-log-form">
+                <div class="form-group">
+                    <label for="log-description">Task Description</label>
+                    <textarea id="log-description" name="description" required placeholder="Describe what you accomplished..."></textarea>
+                </div>
+                <div class="form-group">
+                    <label for="log-date">Date</label>
+                    <input type="date" id="log-date" name="date" required>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="log-start-time">Start Time (Optional)</label>
+                        <input type="time" id="log-start-time" name="startTime">
+                    </div>
+                    <div class="form-group">
+                        <label for="log-end-time">End Time (Optional)</label>
+                        <input type="time" id="log-end-time" name="endTime">
+                    </div>
+                </div>
+                <div class="modal-actions">
+                    <button type="button" class="btn btn-outline" id="cancel-log">Cancel</button>
+                    <button type="submit" class="btn btn-primary">Save Task</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Toast Container -->
+    <div id="toast-container"></div>
+
+    <script src="app.js"></script>
+</body>
+</html>
