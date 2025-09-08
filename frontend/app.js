@@ -32,38 +32,28 @@ function removeAuthToken() {
   localStorage.removeItem("auth_token");
 }
 
+// ✅ central API wrapper
 async function apiRequest(method, endpoint, data = null) {
-  const token = getAuthToken();
-  const headers = {
-    "Content-Type": "application/json",
-  };
+  const headers = { "Content-Type": "application/json" };
 
+  // 🔑 add JWT token if available
+  const token = localStorage.getItem("token");
   if (token) {
     headers["Authorization"] = `Bearer ${token}`;
   }
 
-  const config = {
+  const response = await fetch(`/api${endpoint}`, {
     method,
     headers,
-  };
+    body: data ? JSON.stringify(data) : null,
+  });
 
-  if (data) {
-    config.body = JSON.stringify(data);
+  if (!response.ok) {
+    const error = await response.json().catch(() => ({}));
+    throw new Error(error.detail || "API request failed");
   }
 
-  try {
-    const response = await fetch(`${API_BASE_URL}${endpoint}`, config);
-
-    if (!response.ok) {
-      const error = await response.text();
-      throw new Error(error || `HTTP ${response.status}`);
-    }
-
-    return await response.json();
-  } catch (error) {
-    console.error("API Error:", error);
-    throw error;
-  }
+  return response.json();
 }
 
 // Toast Notifications
@@ -123,14 +113,20 @@ function showView(viewId) {
 }
 
 // Authentication
+// ✅ login function
 async function login(email, password) {
   try {
     const response = await apiRequest("POST", "/auth/login", {
       email,
       password,
     });
-    setAuthToken(response.token);
+
+    // store token for later requests
+    localStorage.setItem("token", response.token);
+
+    // save user info in state
     state.user = response.user;
+
     await loadUserProfile();
     showPage("dashboard-page");
     setupUserInterface();
